@@ -1,5 +1,4 @@
 __pycache__/
-exps/
 data/past_forecasts/
 venv_dev_local/
 local_venv/
@@ -8,6 +7,7 @@ ensemble_
 *.ssv
 *.csv
 results/
+exps
 
 
 reff_cis_*.csv
