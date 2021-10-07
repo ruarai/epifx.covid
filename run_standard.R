@@ -4,6 +4,9 @@ setwd("~/reff-covid-epifx-aus-2020-dev")
 rm(list = ls())
 library(tidyverse)
 library(lubridate)
+library(future.callr)
+library(listenv)
+library(furrr)
 
 
 ### Downloading latest data
@@ -19,6 +22,7 @@ dbx_files <- tribble(
   "/covid_output/projection/r_eff_12_local_samples.csv", "data/in/r_eff_proj_samples.csv",
   "/covid_output/epifx_in/external_exposures_all.csv",   "data/in/external_exposures_all.csv",
 )
+
 # The vaccine files have different names for each week, so try and work out what they are:
 dbx_files <- bind_rows(dbx_files, get_vaccine_files())
 
@@ -85,29 +89,30 @@ for(i_scen in 1:nrow(scenarios)) {
     truncation_date = scenario$reff_truncation_date)
 }
 
-### Running the forecast across our scenarios:
-# This will launch the two scenario simulations simultaneously (as wait = FALSE)
-# You will need to wait (in place of R) for both the forecasts to complete.
-# Set wait = TRUE if this causes problems
-
 source("interface_functions/epifx.R")
 
-for(i_scen in 1:nrow(scenarios)) {
-  # Clear exps directory
-  file.remove(list.files(scenario$exps_dir, full.names = TRUE))
+run_forecast <- function(name, args, reff_truncation_date, exps_dir) {
+  print(paste0("Running scenario forecast ", name))
   
-  scen_template_file <- paste0("epifx_params/forecast_", scenario$name, ".toml")
+  dir.create(exps_dir, recursive = TRUE, showWarnings = FALSE)
+  file.remove(list.files(exps_dir, full.names = TRUE))
+  
+  scen_template_file <- paste0("epifx_params/forecast_", name, ".toml")
   
   # Create a custom TOML file for this scenario:
   create_forecast_file("epifx_params/forecast_template.toml",
-                       scenario$args[[1]][[1]],
+                       args[[1]],
                        scen_template_file)
   
   system(paste0(venv_prefix, "python3 run_forecast.py ", "--ff ", scen_template_file),
-         wait = FALSE)
+                intern = TRUE)
 }
 
-stop("Wait here!") # Run rest of script once the above system calls finish appropriately
+
+
+### Running the forecast across our scenarios:
+plan(callr)
+future_pmap(scenarios, run_forecast)
 
 
 
@@ -122,10 +127,6 @@ source("forecast_plotting/produce_state_summaries.R")
 source("forecast_plotting/plot_vaccine_effect.R")
 
 source("interface_functions/ensemble_samples.R")
-
-library(future.callr)
-library(listenv)
-plan(callr)
 
 
 job_list <- listenv()
