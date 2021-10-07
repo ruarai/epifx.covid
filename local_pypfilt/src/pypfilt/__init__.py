@@ -249,8 +249,8 @@ def forecast(params, streams, dates, filename):
 
     # Save the forecasting results to disk.
     if filename is not None:
-        logger.info("  {}  Saving to:  {}".format(
-            datetime.datetime.now().strftime("%H:%M:%S"), filename))
+        #logger.info("  {}  Saving to:  {}".format(
+        #    datetime.datetime.now().strftime("%H:%M:%S"), filename))
         # Save the results in the output directory.
         filepath = os.path.join(ctx.params['out_dir'], filename)
         ctx.component['summary'].save_forecasts(forecasts, filepath)

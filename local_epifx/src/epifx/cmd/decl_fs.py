@@ -61,7 +61,7 @@ def run(forecast, forecast_dates):
 
     if params['fresh_cache']:
         try:
-            logger.info('Removing cache file {} ...'.format(cache_file))
+            #logger.info('Removing cache file {} ...'.format(cache_file))
             os.remove(cache_path)
         except OSError as e:
             # Don't raise an error if the file doesn't exist.
@@ -113,7 +113,7 @@ def run(forecast, forecast_dates):
     # Check whether the cache file should be removed.
     if params['remove_cache']:
         try:
-            logger.info('Removing cache file {} ...'.format(cache_file))
+            #logger.info('Removing cache file {} ...'.format(cache_file))
             os.remove(cache_path)
         except OSError as e:
             # Don't raise an error if the file doesn't exist.
@@ -256,3 +256,5 @@ def main(args=None):
                      if (not scenario_ids)
                      or mp_tuple[2] in scenario_ids)
         cmd.run_in_parallel(run_multiprocess, forecasts, n_proc)
+        
+    logger.info("Completed forecasting for scenario '{}'.".format(args['config']))

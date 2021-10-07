@@ -56,65 +56,58 @@ process_external_exposures("data/in/external_exposures_all.csv")
 
 ### Defining our different scenarios for ensembling:
 
-args_with_reversion <- tribble(
-  ~key, ~value,
-  "%exps_dir%", "exps/with_reversion",
-  "%reffs_dir%", "with_reversion"
-)
-args_no_reversion <- tribble(
-  ~key, ~value,
-  "%exps_dir%", "exps/no_reversion",
-  "%reffs_dir%", "no_reversion"
-)
+args_with_reversion <- tribble(~key,          ~value,
+                               "%exps_dir%",  "exps/with_reversion",
+                               "%reffs_dir%", "with_reversion")
+args_no_reversion <- tribble(~key,          ~value,
+                             "%exps_dir%",  "exps/no_reversion",
+                             "%reffs_dir%", "no_reversion")
 
 scenarios <- tribble(
-  ~name, ~args, ~reff_truncation_date,
-  "with_reversion",    list(args_with_reversion),    ymd(NA),
-  "no_reversion",      list(args_no_reversion),      forecasting_dates$date_last_infection_50,
+  ~name,            ~args,                     ~reff_truncation_date,
+  "with_reversion", list(args_with_reversion), ymd(NA),
+  "no_reversion",   list(args_no_reversion),   forecasting_dates$date_last_infection_50,
 ) %>%
   rowwise() %>%
   mutate(exps_dir = args[[1]] %>% filter(key == "%exps_dir%") %>% pull(value))
 
-forecast_template_file <- "forecast_template.toml"
 
 
+# Produce C1/2 trajectories, with truncation at reff_truncation_date, if that is not NULL
+for(i_scen in 1:nrow(scenarios)) {
+  scenario <- scenarios[i_scen,]
+  dir.create(paste0("data/",scenario$name), showWarnings = FALSE)
+  
+  process_reff_trajs(
+    reff_proj_file = "data/in/r_eff_proj_samples.csv",
+    vaccine_effect_file = "data/in/vaccine_effect_timeseries.csv",
+    output_path = paste0("data/",scenario$name),
+    truncation_date = scenario$reff_truncation_date)
+}
 
 ### Running the forecast across our scenarios:
+# This will launch the two scenario simulations simultaneously (as wait = FALSE)
+# You will need to wait (in place of R) for both the forecasts to complete.
+# Set wait = TRUE if this causes problems
 
 source("interface_functions/epifx.R")
 
 for(i_scen in 1:nrow(scenarios)) {
-  require(tidyverse)
-  require(lubridate)
-  
-  scenario <- scenarios[i_scen,]
-  scenario_args <- scenario$args[[1]][[1]]
-  
-  dir.create(paste0("data/",scenario$name), showWarnings = FALSE)
-  
-  process_reff_trajs(reff_proj_file = "data/in/r_eff_proj_samples.csv",
-                     vaccine_effect_file = "data/in/vaccine_effect_timeseries.csv",
-                     output_path = paste0("data/",scenario$name),
-                     truncation_date = scenario$reff_truncation_date)
-  
-  
-  
   # Clear exps directory
   file.remove(list.files(scenario$exps_dir, full.names = TRUE))
   
-  scen_template_file <- paste0("forecast_", scenario$name, ".toml")
+  scen_template_file <- paste0("epifx_params/forecast_", scenario$name, ".toml")
   
   # Create a custom TOML file for this scenario:
-  create_forecast_file(forecast_template_file,
-                       scenario_args,
+  create_forecast_file("epifx_params/forecast_template.toml",
+                       scenario$args[[1]][[1]],
                        scen_template_file)
   
-  system(paste0(venv_prefix,
-                "python3 run_forecast.py ",
-                "--ff ", scen_template_file))
+  system(paste0(venv_prefix, "python3 run_forecast.py ", "--ff ", scen_template_file),
+         wait = FALSE)
 }
 
-
+stop("Wait here!") # Run rest of script once the above system calls finish appropriately
 
 
 
@@ -156,11 +149,6 @@ for(i_scen in 1:nrow(scenarios)) {
 
 # Run every job in parallel now
 job_list <- as.list(job_list)
-
-### Produce mixture for ensemble input
-
-#create_mixture_file(scenarios, run_name)
-
 
 
 ### Upload ensemble samples

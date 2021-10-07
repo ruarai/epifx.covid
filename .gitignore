@@ -4,7 +4,6 @@ data/past_forecasts/
 venv_dev_local/
 local_venv/
 *.pdf
-out_*.csv
 ensemble_
 *.ssv
 *.csv
