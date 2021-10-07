@@ -20,8 +20,6 @@ reff_cis_*.csv
 upload.sh
 interface_functions/dropbox.R
 interface_functions/spartan_backup.R
-interface_functions/vaccination.R
 auth_info
-vaccination/
 data/
 epifx_params/
