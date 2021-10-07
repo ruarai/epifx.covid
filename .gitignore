@@ -1,7 +1,5 @@
 __pycache__/
 exps/
-local_epifx/
-local_pypfilt/
 data/past_forecasts/
 venv_dev_local/
 local_venv/

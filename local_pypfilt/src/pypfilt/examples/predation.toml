@@ -1,0 +1,65 @@
+[components]
+model = "pypfilt.examples.predation.LotkaVolterra"
+time = "pypfilt.Scalar"
+summary = "pypfilt.summary.HDF5"
+
+[model.priors]
+x = { function = "uniform", args.low = 0.5, args.high = 1.5 }
+y = { function = "uniform", args.low = 0.2, args.high = 0.4 }
+alpha = { function = "uniform", args.low = 0.6, args.high = 0.8 }
+beta = { function = "uniform", args.low = 1.2, args.high = 1.4 }
+gamma = { function = "uniform", args.low = 0.9, args.high = 1.1 }
+delta = { function = "uniform", args.low = 0.9, args.high = 1.1 }
+
+[model.bounds]
+x = { min = 0, max = 2 }
+y = { min = 0, max = 2 }
+alpha = { min = 0, max = 2}
+beta = { min = 0, max = 2}
+gamma = { min = 0, max = 2}
+delta = { min = 0, max = 2}
+
+[summary.monitors]
+expected_obs.model = "pypfilt.summary.ExpectedObsMonitor"
+
+[summary.tables]
+model_cints.model = "pypfilt.summary.ModelCIs"
+forecasts.model = "pypfilt.summary.PredictiveCIs"
+forecasts.init.exp_obs_monitor = "expected_obs"
+obs.model = "pypfilt.summary.Obs"
+
+[parameters]
+particles = 1000
+prng_seed = 42
+data_dir = "."
+out_dir = "."
+max_days = 14
+resample.threshold = 0.25
+resample.regularisation = true
+steps_per_unit = 1
+fresh_cache = true
+remove_cache = true
+time.start = 0.0
+time.until = 15.0
+summary.from_first_day = true
+summary.meta.packages = [ "matplotlib" ]
+summary.tables.model_cints.credible_intervals = [ 0, 50, 95 ]
+
+[scenario.example]
+name = "Example Scenario"
+
+[scenario.example.observations.x]
+model = "pypfilt.examples.predation.ObsModel"
+init.obs_period = 0
+file = "predation-counts-x.ssv"
+parameters.sdev = 0.2
+format.sdev = "0.1f"
+name.sdev = "sdev"
+
+[scenario.example.observations.y]
+model = "pypfilt.examples.predation.ObsModel"
+init.obs_period = 0
+file = "predation-counts-y.ssv"
+parameters.sdev = 0.2
+format.sdev = "0.1f"
+name.sdev = "sdev"

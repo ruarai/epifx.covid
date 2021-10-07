@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Influenza forecasts</title>
+    <script type="text/javascript" src="d3.min.js" charset="utf-8">
+    </script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+  <body>
+    <div id="content">
+      <h1>Epidemic forecasts</h1>
+
+      <div class="params">
+        <form id="data-file-form">
+          <label for="data_file">Forecast:</label>
+          <select id="data_file">
+         <option value="data/some-city-2017-bg-08-bgvar-06-disp-100-pr-0.01.json" selected>pr_obs = 0.01</option>
+         <option value="data/some-city-2017-bg-08-bgvar-06-disp-100-pr-0.02.json">pr_obs = 0.02</option>
+          </select>
+        </form>
+      </div>
+
+      <p class="text">
+        Use the slider below to change the forecasting date.
+      </p>
+
+      <p class="caption">
+        <span id="plot1" class="chart">
+        </span>
+      </p>
+
+      <p class="caption">
+        <span id="plot2" class="chart">
+        </span>
+      </p>
+
+      <p class="text">
+        <strong>Observation model parameters</strong><br/>
+        <span id="obs_model"></span>
+      </p>
+
+      <!-- Generate the plots. -->
+      <script type="text/javascript" src="plot.js" charset="utf-8"></script>
+      <script type="text/javascript">
+        var selector = d3.select("#data_file");
+        var data_file = selector.property("value");
+        var fs_config = Plot.default_config(data_file);
+        var fs_plot = Plot.create(fs_config, "#plot1");
+        var pk_config = Plot.peak_config(data_file);
+        var pk_plot = Plot.create(pk_config, "#plot2");
+        Plot.link_to_other_slider(fs_plot, pk_plot);
+
+        selector.on("change", function() {
+            var data_file = selector.property("value");
+            fs_plot.cfg.default_file = data_file;
+            pk_plot.cfg.default_file = data_file;
+            Plot.begin_loading(fs_plot);
+            Plot.begin_loading(pk_plot);
+        });
+      </script>
+    </div>
+  </body>
+</html>

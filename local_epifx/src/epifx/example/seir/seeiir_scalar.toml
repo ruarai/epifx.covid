@@ -1,0 +1,61 @@
+[components]
+model = "epifx.det.SEEIIR"
+time = "pypfilt.Scalar"
+summary = "epifx.summary.make"
+
+[parameters]
+particles = 1000
+prng_seed = 3001
+data_dir = "."
+out_dir = "."
+max_days = 7
+resample.threshold = 0.25
+resample.regularisation = true
+fresh_cache = true
+remove_cache = true
+time.start = 0.0
+time.until = 305.0
+summary.from_first_day = true
+summary.only_forecasts = true
+summary.metadata.packages = [ "epifx" ]
+
+[model.priors]
+R0 = { function = "uniform", args.low = 1.35, args.high = 1.45 }
+sigma = { function = "inverse_uniform", args.inv_low = 0.2, args.inv_high = 0.3 }
+gamma = { function = "inverse_uniform", args.inv_low = 0.2, args.inv_high = 0.3 }
+eta = { function = "uniform", args.low = 1.0, args.high = 1.0 }
+alpha = { function = "uniform", args.low = 0.0, args.high = 0.0 }
+t0 = { function = "uniform", args.low = 0.0, args.high = 28.0 }
+
+[model.bounds]
+R0 = { min = 1.35, max = 1.45 }
+sigma = { min = 0.2, max = 0.3 }
+gamma = { min = 0.2, max = 0.3 }
+eta = { min = 1.0, max = 1.0 }
+alpha = { min = 0, max = 0 }
+t0 = { min = 0, max = 28 }
+
+[summary.init]
+default = true
+
+[scenario.test]
+name = "seeiir_scalar_test"
+parameters.model.population_size = 1_000_000
+sample_lookup_tables = [ "pr_obs" ]
+
+[scenario.test.lookup_tables]
+pr_obs = "pr-obs-scalar.ssv"
+
+[scenario.test.observations.cases]
+model = "epifx.obs.PopnCounts"
+init.obs_period = 7
+init.pr_obs_lookup = "pr_obs"
+file = "weekly-cases-scalar.ssv"
+file_args.time_col = "day"
+file_args.value_col = "cases"
+parameters.bg_obs = 200
+parameters.bg_var = 3000
+parameters.pr_obs = 0.5
+parameters.disp = 100
+format = { bg_obs = "03.0f", bg_var = "03.0f", pr_obs = "0.1f", disp = "03.0f" }
+name = { bg_obs = "bg", bg_var = "bgvar", pr_obs = "pr", disp = "disp" }
