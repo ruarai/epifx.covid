@@ -3,7 +3,7 @@
 
 factor_table <- expand_grid(
   scenario_name = scenarios$name,
-  run_name = c("2021-10-02")
+  run_name = c("2021-10-02", "2021-10-04")
 )
 
 
@@ -28,7 +28,7 @@ ensemble_samples <- pmap_dfr(
 require(matrixStats)
 require(Cairo)
 
-fs_date <- last_onset_date
+fs_date <- forecasting_dates$date_last_onset_50
 
 filter_state <- . %>%
   filter(state %in% c("VIC", "NSW", "ACT"))
@@ -42,38 +42,34 @@ ensemble_quants <- ensemble_samples %>% select(starts_with("sim")) %>%
   bind_cols(data_cols, as_tibble(.)) %>%
   select(-1) %>%
   `colnames<-`(c(names(data_cols),"lower_90", "lower_50", "median", "upper_50", "upper_90")) %>%
-  mutate(plot_group = interaction(scenario_name, run_name),
-         upper_90 = ifelse(upper_90 > 2000, 2000, upper_90)) %>%
+  mutate(plot_group = interaction(scenario_name, run_name)) %>%
   filter_state %>%
-  filter(date >= fs_date, date <= fs_date + 28)
+  filter(date >= fs_date - 14, date <= fs_date + 28) %>%
+  
+  group_by(state) %>%
+  mutate(upper_90_lim = max(upper_50) * 2,
+         upper_90 = if_else(upper_90 > upper_90_lim, upper_90_lim, upper_90))
 
 
-
-
-CairoPDF(paste0("results/", run_name, "/comparison_reversion.pdf"), 
-         width = 8, height = 6)
-
-# scenario_labels <- c("no_reversion" = "No reversion to C1",
-#                      "with_reversion" = "With reversion to C1")
 
 ggplot() +
-  
-  
+
+
   geom_ribbon(aes(x = date, ymin = lower_90, ymax = upper_90,
-                  group = scenario_name,
-                  fill = scenario_name),
+                  group = plot_group,
+                  fill = run_name),
               alpha = 0.2,
               ensemble_quants) +
-  
+
   
   geom_ribbon(aes(x = date, ymin = lower_50, ymax = upper_50,
-                  group = scenario_name,
-                  fill = scenario_name),
+                  group = plot_group, color = run_name,
+                  fill = run_name),
               alpha = 0.5,
               ensemble_quants) +
   
   geom_line(aes(x = date, y = median, group = plot_group,
-                color = scenario_name),
+                color = run_name),
             ensemble_quants) +
   
   facet_grid(cols = vars(scenario_name),
@@ -86,16 +82,16 @@ ggplot() +
   
   scale_x_date(breaks = scales::breaks_pretty(5),
                labels = scales::label_date_short()) +
-  coord_cartesian(xlim = c(fs_date, fs_date + 28)) +
   
   ylab("Notifications") + xlab("Date") +
   
-  scale_color_brewer("Scenario",
-                     palette = 1, type = 'qual') +
-  scale_fill_brewer(palette = 1, type = 'qual') +
+  scale_color_brewer("Forecast",
+                     palette = 2, type = 'qual') +
+  scale_fill_brewer(palette = 2, type = 'qual') +
   
   theme_minimal() +
   theme(legend.position = 'bottom') +
   guides(fill = 'none')
 
-dev.off()
+ggsave(paste0("results/", run_name, "/comparison_reversion.png"),
+       width = 8, height = 6, bg = 'white')
