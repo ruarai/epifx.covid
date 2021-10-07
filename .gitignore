@@ -1,0 +1,27 @@
+__pycache__/
+exps/
+local_epifx/
+local_pypfilt/
+data/past_forecasts/
+venv_dev_local/
+local_venv/
+*.pdf
+out_*.csv
+ensemble_
+*.ssv
+*.csv
+results/
+
+
+reff_cis_*.csv
+.Rproj.user
+
+# Being careful not to release anything here:
+upload.sh
+interface_functions/dropbox.R
+interface_functions/spartan_backup.R
+interface_functions/vaccination.R
+auth_info
+vaccination/
+data/
+epifx_params/

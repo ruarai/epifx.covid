@@ -1,0 +1,99 @@
+---
+title: "Forecast summary tables"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(root.dir = "~/reff-covid-epifx-aus-2020-dev/")
+```
+
+
+
+```{r echo=FALSE, message=FALSE, results='hide'}
+library(tidyverse)
+library(lubridate)
+library(kableExtra)
+
+forecast_exps_dir <- "exps_with_reversion"
+source("./forecast_plotting/plotting_common.R", echo = FALSE)
+
+
+unabbreviate_states <- function(state_names) {
+  case_when(
+    state_names %in% c("Australian Capital Territory", "ACT") ~ "ACT",
+    state_names %in% c("New South Wales", "NSW") ~ "New South Wales",
+    state_names %in% c("Northern Territory", "NT") ~ "Northern Territory",
+    state_names %in% c("Queensland", "QLD") ~ "Queensland",
+    state_names %in% c("South Australia", "SA") ~ "South Australia",
+    state_names %in% c("Tasmania", "TAS") ~ "Tasmania",
+    state_names %in% c("Victoria", "VIC") ~ "Victoria",
+    state_names %in% c("Western Australia", "WA") ~ "Western Australia"
+  )
+}
+
+dt_forecasts <- hdf_files %>%
+  pmap_dfr(function(file, state) {
+    h5read(file = file,
+           name = "/data/forecasts") %>%
+      select(date, prob, ymin, ymax) %>%
+      mutate(date = read_hdf_date(date),
+             prob = factor(prob, levels = c(95, 50, 0)),
+             state = state)
+  })
+
+```
+
+```{r include=FALSE}
+
+summ_range <- function(a, b){
+  ifelse(a == b, a, str_c(a, " - ", b))
+}
+  
+
+table_cases_by_date <- function(date_filter) {
+  cases_fs_date <- dt_forecasts %>%
+    group_by(date, state, prob) %>%
+    filter(date == date_filter) %>%
+    slice(1)
+  
+  summary_table <- cases_fs_date %>% 
+    ungroup() %>%
+    mutate(range = summ_range(ymin, ymax),
+           state = unabbreviate_states(state)) %>%
+    select(-c(ymin, ymax)) %>%
+    pivot_wider(values_from = range,
+                names_from = prob,
+                names_prefix = "prob_") %>%
+    select(state, prob_0, prob_50, prob_95)
+  
+  summary_table %>%
+    kbl(booktabs = TRUE, linesep = "",
+        col.names = c("State/Territory", "Median", "50% CI", "95% CI")) %>%
+    kable_styling(latex_options = "striped",
+                  full_width = TRUE)
+}
+```
+
+
+\subsection{Nowcast cases by case data date (`r fs_date`):}
+```{r echo=FALSE}
+table_cases_by_date(fs_date)
+```
+
+\subsection{Forecast cases by case data date + 1 week (`r fs_date + 7`):}
+```{r echo=FALSE}
+table_cases_by_date(fs_date + 7)
+```
+\subsection{Forecast cases by case data date + 2 weeks (`r fs_date + 14`):}
+```{r echo=FALSE}
+table_cases_by_date(fs_date + 14)
+```
+\subsection{Forecast cases by case data date + 3 weeks (`r fs_date + 21`):}
+```{r echo=FALSE}
+table_cases_by_date(fs_date + 21)
+```
+\subsection{Forecast cases by case data date + 4 weeks (`r fs_date + 28`):}
+```{r echo=FALSE}
+table_cases_by_date(fs_date + 28)
+```
