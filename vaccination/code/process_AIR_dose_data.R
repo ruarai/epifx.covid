@@ -18,18 +18,18 @@ produce_Ei_Et_timeseries <- function(vacc_dose_data_file,
   dose_data <- read_csv(vacc_dose_data_file) %>%
     mutate(date = date + 6)
   
-  # ATAGI Delta estimates as of 2021-08-19
+  # ATAGI Delta estimates as of 2021-10-07 (Pouwels, Eyre)
   assign_vacc_Ei <- function(vaccine_type, dose) {
-    case_when(vaccine_type == "pf" & dose == 1 ~ 0.3,
-              vaccine_type == "pf" & dose == 2 ~ 0.79,
-              vaccine_type == "az" & dose == 1 ~ 0.18,
-              vaccine_type == "az" & dose == 2 ~ 0.6)
+    case_when(vaccine_type == "pf" & dose == 1 ~ 0.57,
+              vaccine_type == "pf" & dose == 2 ~ 0.80,
+              vaccine_type == "az" & dose == 1 ~ 0.46,
+              vaccine_type == "az" & dose == 2 ~ 0.67)
   }
   assign_vacc_Et <- function(vaccine_type, dose) {
-    case_when(vaccine_type == "pf" & dose == 1 ~ 0.46,
+    case_when(vaccine_type == "pf" & dose == 1 ~ 0.13,
               vaccine_type == "pf" & dose == 2 ~ 0.65,
-              vaccine_type == "az" & dose == 1 ~ 0.48,
-              vaccine_type == "az" & dose == 2 ~ 0.65)
+              vaccine_type == "az" & dose == 1 ~ 0.02,
+              vaccine_type == "az" & dose == 2 ~ 0.36)
   }
   
   assign_vacc_overall<- function(vaccine_type, dose) {
