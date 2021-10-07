@@ -21,5 +21,6 @@ upload.sh
 interface_functions/dropbox.R
 interface_functions/spartan_backup.R
 auth_info
+auth_info_spartan
 data/
 epifx_params/
