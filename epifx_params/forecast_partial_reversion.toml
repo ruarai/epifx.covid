@@ -1,0 +1,141 @@
+[components]
+model = "epifx.stoch.SEEIIR"
+time = "pypfilt.Datetime"
+summary = "epifx.summary.make"
+
+[parameters]
+particles = 2000
+prng_seed = 3001
+steps_per_unit = 100
+last_n_periods = 1
+data_dir = "./data"
+tmp_dir = "exps/partial_reversion"
+out_dir = "exps/partial_reversion"
+max_days = 7
+model.forecast_with_future_R0 = true
+model.prior_samples.file = 'prior-sigma-gamma.ssv'
+model.prior_samples.columns = ['sigma', 'gamma']
+model.regularisation.R0_ix = true
+model.reorder_reffs = true
+resample.threshold = 0.25
+resample.regularisation = true
+time.start = "2020-01-01"
+# NOTE: extend the simulation period beyond 2020.
+time.until = "2022-01-01"
+time.max_forecast_ahead = 70
+summary.from_first_day = true
+# NOTE: save results from the forecast *and* the estimation pass.
+summary.only_forecasts = false
+summary.metadata.packages = [ "epifx" ]
+summary.tables.model_samples.number_of_samples = 20
+summary.tables.seeiir.resample = false
+fresh_cache = true
+remove_cache = true
+
+[model.bounds]
+R0 = { min = 2.53, max = 2.53 }
+sigma = { min = 0.4, max = 0.6 }
+gamma = { min = 0.209, max = 10.0 }
+t0 = { min = 0, max = 49 }
+R0_ix = { min = 0, max = 999 }
+
+[model.priors]
+R0 = { function = "uniform", args.low = 2.53, args.high = 2.53 }
+sigma = { function = "uniform", args.low = 0.1, args.high = 10.0 }
+gamma = { function = "uniform", args.low = 0.1, args.high = 10.0 }
+t0.function = "integers"
+t0.args = { low = 0, high = 49, endpoint = true }
+
+[summary.init]
+default = true
+
+[summary.tables]
+model_samples.model = "epifx.summary.ForecastEnsemble"
+seeiir.model = "customtables_vacc.SEEIIR"
+
+[observations.Notifications]
+model = "epifx.obs.PopnCounts"
+init.obs_period = 1
+file_args.time_col = "date"
+file_args.value_col = "cases"
+file_args.pr_detect_col = "pr_detect"
+parameters.bg_obs = 0.05
+parameters.pr_obs = [ 0.8 ]
+parameters.disp = 10
+format = { bg_obs = "05.1f", bg_var = "03.0f", pr_obs = "0.5f", disp = "03.0f" }
+name = { bg_obs = "bg", bg_var = "bgvar", pr_obs = "pr", disp = "disp" }
+plot.axis_label = "Daily COVID-19 Notifications"
+plot.axis_precision = 0
+plot.point_label = "notifications/day"
+plot.point_precision = 0
+
+
+[scenario.VIC_FS]
+name = "Victoria"
+parameters.model.population_size = 6_682_000
+lookup_tables.R0 = "with_reversion/reff-proj-vic.ssv"
+lookup_tables.vaccinations = "vacc-data-vic.ssv"
+lookup_tables.external_exposures = "daily-external-exposures-vic.ssv"
+observations.Notifications.file = "daily-covid-cases-50-vic.ssv"
+model.bounds.t0 = { min = 20, max = 70 }
+model.priors.t0.function = "integers"
+model.priors.t0.args = { low = 20, high = 70, endpoint = true }
+
+[scenario.NSW_FS]
+name = "New South Wales"
+parameters.model.population_size = 8_168_000
+lookup_tables.R0 = "with_reversion/reff-proj-nsw.ssv"
+lookup_tables.vaccinations = "vacc-data-nsw.ssv"
+lookup_tables.external_exposures = "daily-external-exposures-nsw.ssv"
+observations.Notifications.file = "daily-covid-cases-50-nsw.ssv"
+model.priors.t0.function = "integers"
+
+
+[scenario.QLD_FS]
+name = "Queensland"
+parameters.model.population_size = 5_186_000
+lookup_tables.R0 = "with_reversion/reff-proj-qld.ssv"
+lookup_tables.vaccinations = "vacc-data-qld.ssv"
+lookup_tables.external_exposures = "daily-external-exposures-qld.ssv"
+observations.Notifications.file = "daily-covid-cases-50-qld.ssv"
+
+[scenario.WA_FS]
+name = "Western Australia"
+parameters.model.population_size = 2_667_000
+lookup_tables.R0 = "with_reversion/reff-proj-wa.ssv"
+lookup_tables.vaccinations = "vacc-data-wa.ssv"
+lookup_tables.external_exposures = "daily-external-exposures-wa.ssv"
+observations.Notifications.file = "daily-covid-cases-50-wa.ssv"
+
+[scenario.SA_FS]
+name = "South Australia"
+parameters.model.population_size = 1_771_000
+lookup_tables.R0 = "with_reversion/reff-proj-sa.ssv"
+lookup_tables.vaccinations = "vacc-data-sa.ssv"
+lookup_tables.external_exposures = "daily-external-exposures-sa.ssv"
+observations.Notifications.file = "daily-covid-cases-50-sa.ssv"
+
+[scenario.ACT_FS]
+name = "Australian Capital Territory"
+parameters.model.population_size = 431_500
+lookup_tables.R0 = "with_reversion/reff-proj-act.ssv"
+lookup_tables.vaccinations = "vacc-data-act.ssv"
+lookup_tables.external_exposures = "daily-external-exposures-act.ssv"
+observations.Notifications.file = "daily-covid-cases-50-act.ssv"
+
+[scenario.NT_FS]
+name = "Northern Territory"
+parameters.model.population_size = 246_700
+lookup_tables.R0 = "with_reversion/reff-proj-nt.ssv"
+lookup_tables.vaccinations = "vacc-data-nt.ssv"
+lookup_tables.external_exposures = "daily-external-exposures-nt.ssv"
+observations.Notifications.file = "daily-covid-cases-50-nt.ssv"
+
+[scenario.TAS_FS]
+name = "Tasmania"
+parameters.model.population_size = 541_300
+lookup_tables.R0 = "with_reversion/reff-proj-tas.ssv"
+lookup_tables.vaccinations = "vacc-data-tas.ssv"
+lookup_tables.external_exposures = "daily-external-exposures-tas.ssv"
+observations.Notifications.file = "daily-covid-cases-50-tas.ssv"
+
