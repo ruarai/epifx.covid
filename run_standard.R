@@ -158,7 +158,7 @@ job_list <- as.list(job_list)
 
 ensembles_for_upload <- str_c("ensemble_samples/",
                               "moss_forecast_samples_vacc_",
-                              scenarios$name,
+                              "no_reversion",
                               "_", run_name, ".csv")
 
 
