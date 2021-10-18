@@ -37,8 +37,6 @@ forecasting_dates <- get_forecast_dates("data/in/local_cases_input.csv")
 
 run_name <- forecasting_dates$date_last_onset_50 %>% format("%Y-%m-%d")
 
-run_name <- str_c(run_name, "_proj_vacc")
-
 ### Processing vaccine data
 
 source("interface_functions/vaccination.R")
@@ -106,8 +104,7 @@ run_forecast <- function(name, args, reff_truncation_date, exps_dir) {
                        args[[1]],
                        scen_template_file)
   
-  system(paste0(venv_prefix, "python3 run_forecast.py ", "--ff ", scen_template_file),
-                intern = TRUE)
+  system(paste0(venv_prefix, "python3 run_forecast.py ", "--ff ", scen_template_file))
 }
 
 
@@ -158,7 +155,7 @@ job_list <- as.list(job_list)
 
 ensembles_for_upload <- str_c("ensemble_samples/",
                               "moss_forecast_samples_vacc_",
-                              "no_reversion",
+                              scenarios$name,
                               "_", run_name, ".csv")
 
 

@@ -46,7 +46,8 @@ produce_first_dose_timeseries <- function(vacc_dose_data_file,
   source("vaccination/code/simple_first_dose_projection.R")
   
   AIR_first_dose_counts_interp <- project_first_doses(AIR_first_dose_counts_interp,
-                                                      over12_pop)
+                                                      over12_pop,
+                                                      diag_plot_dir)
   
   p2 <- ggplot() +
     geom_line(aes(x = date, y = count_new),

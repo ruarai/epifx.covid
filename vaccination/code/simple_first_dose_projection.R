@@ -1,4 +1,4 @@
-project_first_doses <- function(AIR_first_dose_counts_interp, over12_pop) {
+project_first_doses <- function(AIR_first_dose_counts_interp, over12_pop, diag_plot_dir) {
   
   
   simple_logit_models <- AIR_first_dose_counts_interp %>%
@@ -15,10 +15,10 @@ project_first_doses <- function(AIR_first_dose_counts_interp, over12_pop) {
   names(simple_logit_lookup) <- simple_logit_models$state
   
   
-  pred_data <- map_dfr(unique(AIR_first_dose_counts$state),
+  pred_data <- map_dfr(unique(AIR_first_dose_counts_interp$state),
                        function(i_state) {
                          prediction_data <- expand_grid(
-                           date = seq(max(AIR_first_dose_counts$date) + 1, max(AIR_first_dose_counts$date) + 28, by = 'day')
+                           date = seq(max(AIR_first_dose_counts_interp$date) + 1, max(AIR_first_dose_counts_interp$date) + 28, by = 'day')
                          ) %>%
                            mutate(t = as.numeric(date - ymd("2020-01-01"))) %>%
                            mutate(pred_prop = predict(simple_logit_lookup[i_state][[1]],
@@ -59,7 +59,7 @@ project_first_doses <- function(AIR_first_dose_counts_interp, over12_pop) {
     geom_hline(aes(yintercept = population, color = 'Total population'),
                state_populations) +
     
-    geom_vline(xintercept = max(AIR_first_dose_counts$date),
+    geom_vline(xintercept = max(AIR_first_dose_counts_interp$date),
                alpha = 0.5, linetype = 'dashed') +
     
     scale_y_continuous(breaks = scales::breaks_extended(),

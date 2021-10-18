@@ -3,7 +3,7 @@
 
 factor_table <- expand_grid(
   scenario_name = "no_reversion",
-  run_name = c("2021-09-10","2021-09-17", "2021-09-25", "2021-10-02")
+  run_name = c("2021-09-17", "2021-09-25", "2021-10-02", "2021-10-08_proj_vacc")
 )
 
 
@@ -95,8 +95,8 @@ ggplot() +
               alpha = 0.5,
               ensemble_quants) +
   
-  geom_line(aes(x = date, y = median, group = plot_group,
-                color = "median"),
+  geom_line(aes(x = date, y = median, group = plot_group),
+            color = '#3182bd',
             ensemble_quants) +
   
   facet_grid(cols = vars(run_name),

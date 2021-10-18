@@ -3,7 +3,7 @@
 
 factor_table <- expand_grid(
   scenario_name = scenarios$name,
-  run_name = c("2021-10-02", "2021-10-08")
+  run_name = c("2021-10-15")
 )
 
 
@@ -52,7 +52,7 @@ ensemble_quants <- ensemble_samples %>% select(starts_with("sim")) %>%
   filter(date >= fs_date - 14, date <= fs_date + 28) %>%
   
   group_by(state) %>%
-  mutate(upper_90_lim = max(upper_50) * 2,
+  mutate(upper_90_lim = max(upper_90) * 0.5,
          upper_90 = if_else(upper_90 > upper_90_lim, upper_90_lim, upper_90))
 
 
@@ -81,7 +81,7 @@ ggplot() +
              rows = vars(state),
              scales = "free_y") + #,
              #labeller = as_labeller(scenario_labels)) +
-  scale_y_continuous(breaks = scales::breaks_extended(10),
+  scale_y_continuous(breaks = scales::breaks_extended(5),
                      labels = scales::label_comma(),
                      position = 'right') +
   
@@ -95,8 +95,8 @@ ggplot() +
   scale_fill_brewer(palette = 2, type = 'qual') +
   
   theme_minimal() +
-  theme(legend.position = 'bottom') +
+  theme(legend.position = 'none') +
   guides(fill = 'none')
 
-ggsave(paste0("results/", run_name, "/comparison_reversion.png"),
+ggsave(paste0("results/", run_name, "/scenario_comparison.png"),
        width = 8, height = 6, bg = 'white')

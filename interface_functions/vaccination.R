@@ -7,6 +7,7 @@ produce_vaccination_inputs <- function(vacc_dose_data_file,
   source("vaccination/code/process_AIR_dose_data.R")
   source("vaccination/code/process_first_dose_timeseries.R")
   
+  diag_plot_dir <- paste0("results/", run_name, "/diagnostics")
   
   Ei_Et_timeseries <- produce_Ei_Et_timeseries(vacc_dose_data_file,
                                                vacc_timeseries_file,
@@ -38,7 +39,8 @@ produce_vaccination_inputs <- function(vacc_dose_data_file,
     
     coord_cartesian(ylim = c(0,0.8))
   
-  ggsave("results/diagnostics/Ei_Et_timeseries_final.png", width = 8, height = 6)
+  ggsave(paste0(diag_plot_dir, "/Ei_Et_timeseries_final.png"),
+         width = 8, height = 6)
   
   
   
