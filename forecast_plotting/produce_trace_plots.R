@@ -7,23 +7,24 @@ library(furrr)
 
 
 source("forecast_plotting/plotting_common.R")
-plotting_data <- get_plotting_data("exps/no_reversion/")
-
-
-dir.create(plot_subdir, showWarnings = FALSE, recursive = TRUE)
+plotting_data <- get_plotting_data("exps/vic_cf_vacc/")
+# 
+# 
+# dir.create(plot_subdir, showWarnings = FALSE, recursive = TRUE)
 
 plan(callr, workers = 8)
 
 dt_statevec <- plotting_data$hdf_files %>%
-  future_pmap_dfr(function(file, state) {
+  future_pmap(function(file, state) {
     h5read(file = file,
-           name = "/data/seeiir") %>%
-      pivot_longer(cols = -c(fs_date, date, ix, weight)) %>%
-      select(date, index = ix, weight, name, value) %>%
-      mutate(date = read_hdf_date(date),
-             state = state)
+           name = "/data/seeiir")
   })
 
+# %>%
+#   pivot_longer(cols = -c(fs_date, date, ix, weight)) %>%
+#   select(date, index = ix, weight, name, value) %>%
+#   mutate(date = read_hdf_date(date),
+#          state = state)
 
 param_ordering <- c("sigma", "gamma",
                     "adjustment",

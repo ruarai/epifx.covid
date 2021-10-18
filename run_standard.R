@@ -37,6 +37,8 @@ forecasting_dates <- get_forecast_dates("data/in/local_cases_input.csv")
 
 run_name <- forecasting_dates$date_last_onset_50 %>% format("%Y-%m-%d")
 
+run_name <- str_c(run_name, "_proj_vacc")
+
 ### Processing vaccine data
 
 source("interface_functions/vaccination.R")

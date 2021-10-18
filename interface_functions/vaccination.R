@@ -49,6 +49,8 @@ produce_vaccination_inputs <- function(vacc_dose_data_file,
     select(date, state, rate = count_new, mean_Ei, mean_Et) %>%
     ungroup()
   
+  output_data %>%
+    write_csv("vaccination/vaccination_output_data.csv")
   
   
   
