@@ -100,3 +100,42 @@ ggplot() +
 
 ggsave(paste0("results/", run_name, "/scenario_comparison.png"),
        width = 8, height = 6, bg = 'white')
+
+
+
+ggplot() +
+
+
+  geom_ribbon(aes(x = date, ymin = lower_50, ymax = upper_50,
+                  group = plot_group,
+                  fill = scenario_name),
+              alpha = 0.5,
+              ensemble_quants) +
+  
+  geom_line(aes(x = date, y = median, group = plot_group,
+                color = scenario_name),
+            ensemble_quants) +
+  
+  facet_grid(cols = vars(scenario_name),
+             rows = vars(state),
+             scales = "free_y") + #,
+             #labeller = as_labeller(scenario_labels)) +
+  scale_y_continuous(breaks = scales::breaks_extended(5),
+                     labels = scales::label_comma(),
+                     position = 'right') +
+  
+  scale_x_date(breaks = scales::breaks_pretty(5),
+               labels = scales::label_date_short()) +
+  
+  ylab("Notifications") + xlab("Date") +
+  
+  scale_color_brewer("Forecast",
+                     palette = 2, type = 'qual') +
+  scale_fill_brewer(palette = 2, type = 'qual') +
+  
+  theme_minimal() +
+  theme(legend.position = 'none') +
+  guides(fill = 'none')
+
+ggsave(paste0("results/", run_name, "/scenario_comparison_50.png"),
+       width = 8, height = 6, bg = 'white')
