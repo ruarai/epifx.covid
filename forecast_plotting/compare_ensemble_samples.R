@@ -51,9 +51,9 @@ ensemble_quants <- ensemble_samples %>% select(starts_with("sim")) %>%
   filter_state %>%
   filter(date >= fs_date - 14, date <= fs_date + 28) %>%
   
-  group_by(state) %>%
-  mutate(upper_90_lim = max(upper_90) * 0.5,
-         upper_90 = if_else(upper_90 > upper_90_lim, upper_90_lim, upper_90))
+  group_by(state) # %>%
+  # mutate(upper_90_lim = max(upper_90) * 0.5,
+  #        upper_90 = if_else(upper_90 > upper_90_lim, upper_90_lim, upper_90))
 
 
 
