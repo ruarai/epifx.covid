@@ -50,6 +50,16 @@ produce_CI_plots <- function(plotting_data, plot_subdir) {
     ggtitle("Backcast case counts (50% and 95% credible intervals)") +
     plotting_data$forecast_line
   print(p)
+
+  p <- make_obs_and_CI_plot(plotting_data$dt_notifications,
+                            dt_forecasts,
+                            plotting_data$fs_date - 35,
+                            plotting_data$fs_date + 4,
+                            use_columns = TRUE,
+                            probs_plot = c(50,95)) +
+    ggtitle("Recent backcast (50% and 95% credible intervals)") +
+    plotting_data$forecast_line
+  print(p)
   
   p <- make_obs_and_CI_plot(plotting_data$dt_notifications,
                             dt_forecasts,
