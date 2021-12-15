@@ -3,7 +3,7 @@
 
 factor_table <- expand_grid(
   scenario_name = scenarios$name,
-  run_name = c("2021-10-15")
+  run_name = run_name
 )
 
 
