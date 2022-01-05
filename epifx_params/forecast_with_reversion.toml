@@ -21,7 +21,7 @@ resample.threshold = 0.25
 resample.regularisation = true
 time.start = "2020-01-01"
 # NOTE: extend the simulation period beyond 2020.
-time.until = "2022-01-01"
+time.until = "2022-12-31"
 time.max_forecast_ahead = 70
 summary.from_first_day = true
 # NOTE: save results from the forecast *and* the estimation pass.

@@ -51,11 +51,14 @@ produce_vaccination_inputs("data/in/effective_dose_data.csv",
 
 
 # Read in the local cases file and split into SSV files for each state
+# NOTE: change detection threshold to 90% for the forecasts run on 2022-01-05.
 process_local_cases("data/in/local_cases_input.csv", 
-                    pr_detect_threshold = 0.5)
+                    pr_detect_threshold = 0.90)
+                    # pr_detect_threshold = 0.5)
 
 # As above, for our external exposures listing
-process_external_exposures("data/in/external_exposures_all.csv")
+# NOTE: manually add SA exposures on 2021-11-18.
+# process_external_exposures("data/in/external_exposures_all.csv")
 
 
 ### Defining our different scenarios for ensembling:
