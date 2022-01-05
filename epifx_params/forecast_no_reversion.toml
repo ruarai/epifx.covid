@@ -1,3 +1,5 @@
+sample_lookup_tables = ["case_ascertainment"]
+
 [components]
 model = "epifx.stoch.SEEIIR"
 time = "pypfilt.Datetime"
@@ -32,6 +34,9 @@ summary.tables.seeiir.resample = false
 fresh_cache = true
 remove_cache = true
 
+[lookup_tables]
+case_ascertainment = "case-ascertainment.ssv"
+
 [model.bounds]
 R0 = { min = 2.53, max = 2.53 }
 sigma = { min = 0.4, max = 0.6 }
@@ -56,6 +61,7 @@ seeiir.model = "customtables_vacc.SEEIIR"
 [observations.Notifications]
 model = "epifx.obs.PopnCounts"
 init.obs_period = 1
+init.pr_obs_lookup = "case_ascertainment"
 file_args.time_col = "date"
 file_args.value_col = "cases"
 file_args.pr_detect_col = "pr_detect"
