@@ -39,13 +39,17 @@ run_name <- forecasting_dates$date_last_onset_50 %>% format("%Y-%m-%d")
 
 ### Processing vaccine data
 
-source("interface_functions/vaccination.R")
+use_original_method <- FALSE
 
-
-produce_vaccination_inputs("data/in/effective_dose_data.csv",
-                           "data/in/vaccine_effect_timeseries.csv",
-                           run_name)
-
+if (use_original_method) {
+    source("interface_functions/vaccination.R")
+    produce_vaccination_inputs("data/in/effective_dose_data.csv",
+                               "data/in/vaccine_effect_timeseries.csv",
+                               run_name)
+} else {
+    source("interface_functions/vaccination_dummy.R")
+    produce_interim_vaccination_inputs("data/in/vaccine_effect_timeseries.csv")
+}
 
 ### Processing R_eff, case counts:
 
