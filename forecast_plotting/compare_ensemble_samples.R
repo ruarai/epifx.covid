@@ -35,7 +35,7 @@ require(Cairo)
 fs_date <- forecasting_dates$date_last_onset_50
 
 filter_state <- . %>%
-  filter(state %in% c("VIC", "NSW", "ACT"),
+  filter(state %in% c("VIC", "NSW", "QLD"),
          date >= fs_date - 14, date <= fs_date + 28)
 
 data_cols <- ensemble_samples %>%
