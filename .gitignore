@@ -16,6 +16,7 @@ reff_cis_*.csv
 # Being careful not to release anything here:
 upload.sh
 interface_functions/dropbox.R
+interface_functions/mediaflux.R
 interface_functions/spartan_backup.R
 auth_info
 auth_info_spartan

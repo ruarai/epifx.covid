@@ -23,12 +23,12 @@ dbx_files <- tribble(
   "/covid_output/epifx_in/external_exposures_all.csv",   "data/in/external_exposures_all.csv",
 )
 
-# The vaccine files have different names for each week, so try and work out what they are:
-dbx_files <- bind_rows(dbx_files, get_vaccine_files())
-
 # And then download all of them
 download_files(dbx_files)
 
+# Download the vaccination files from mediaflux
+source("interface_functions/mediaflux.R")
+sync_latest_mediaflux()
 
 
 # Create a 'run_name' that we use to label our results
