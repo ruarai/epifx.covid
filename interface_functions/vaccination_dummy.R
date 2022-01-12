@@ -2,9 +2,9 @@
 
 produce_interim_vaccination_inputs <- function(vacc_timeseries_file) {
   
-  VE_timeseries <- read_csv(vacc_timeseries_file)
-  
-  
+  # VE_timeseries <- read_csv(vacc_timeseries_file)
+  VE_timeseries <- interpolated_vaccine_effect(vacc_timeseries_file)
+
   Ei_Et_timeseries <- VE_timeseries %>%
     mutate(mean_Ei = 1 - sqrt(effect),
            mean_Et = mean_Ei) %>%
@@ -54,4 +54,62 @@ produce_interim_vaccination_inputs <- function(vacc_timeseries_file) {
     
   }
     
+}
+
+
+delta_omicron_transition_dates <- function() {
+    tribble(
+        ~state, ~delta_until, ~omicron_from,
+        'ACT', as.Date('2021-12-01'), as.Date('2022-01-01'),
+        'NSW', as.Date('2021-12-01'), as.Date('2022-01-01'),
+        'NT',  as.Date('2021-12-01'), as.Date('2022-01-01'),
+        'QLD', as.Date('2021-12-01'), as.Date('2022-01-01'),
+        'SA',  as.Date('2021-12-01'), as.Date('2022-01-01'),
+        'TAS', as.Date('2021-12-01'), as.Date('2022-01-01'),
+        'VIC', as.Date('2021-12-01'), as.Date('2022-01-01'),
+        'WA',  as.Date('2022-12-31'), as.Date('2023-01-01'),
+        )
+}
+
+
+interpolated_vaccine_effect <- function(vacc_timeseries_file) {
+    VE_timeseries <- read_csv(vacc_timeseries_file) %>%
+        mutate(effect_delta = if_else(is.na(effect_delta), 1, effect_delta))
+
+    if (any(is.na(VE_timeseries))) {
+        stop('NA values in VE_timeseries')
+    }
+
+    ratio_interpolation <- delta_omicron_transition_dates()
+
+    VE_effect_timeseries <- inner_join(
+        VE_timeseries, ratio_interpolation, by = 'state') %>%
+        mutate(
+            effect_change = effect_omicron - effect_delta,
+            interp_numer = as.numeric(date - delta_until),
+            interp_denom = as.numeric(omicron_from - delta_until),
+            interp_scale = interp_numer / interp_denom,
+            effect = case_when(
+                date <= delta_until ~ effect_delta,
+                date >= omicron_from ~ effect_omicron,
+                TRUE ~ effect_delta + effect_change * interp_scale)) %>%
+        select(state, date, effect, effect_delta, effect_omicron)
+
+    write_csv(VE_effect_timeseries, vacc_timeseries_file)
+
+    interpolation_plot <- ggplot(VE_effect_timeseries,
+                                 aes(date, effect, colour = state)) +
+        geom_line() +
+        geom_line(mapping = aes(date, effect_delta),
+                  linetype = 'dashed') +
+        geom_line(mapping = aes(date, effect_omicron),
+                  linetype = 'dotted') +
+        xlab(NULL) +
+        ylab('Vaccine effect') +
+        scale_colour_hue(NULL) +
+        theme_minimal()
+
+    ggsave('VE_effect_interpolation.png', width = 8, height = 6)
+
+    VE_effect_timeseries %>% select(state, date, effect)
 }

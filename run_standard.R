@@ -30,6 +30,8 @@ download_files(dbx_files)
 source("interface_functions/mediaflux.R")
 sync_latest_mediaflux()
 
+# Download the Delta and Omicron VE data from dropbox
+download_files(get_vaccine_files())
 
 # Create a 'run_name' that we use to label our results
 # This is the date of the latest case data date with pr_detect > 0.5
