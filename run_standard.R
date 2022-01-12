@@ -64,6 +64,8 @@ process_local_cases("data/in/local_cases_input.csv",
 
 # As above, for our external exposures listing
 # NOTE: manually add SA exposures on 2021-11-18.
+# NOTE: manually add TAS exposures on 2021-12-04.
+# NOTE: manually add WA exposures on 2021-12-14.
 # process_external_exposures("data/in/external_exposures_all.csv")
 
 
