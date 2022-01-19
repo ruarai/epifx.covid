@@ -109,7 +109,7 @@ interpolated_vaccine_effect <- function(vacc_timeseries_file) {
         scale_colour_hue(NULL) +
         theme_minimal()
 
-    ggsave('VE_effect_interpolation.png', width = 8, height = 6)
+    ggsave('VE_effect_interpolation.png', width = 8, height = 6, bg = 'white')
 
     VE_effect_timeseries %>% select(state, date, effect)
 }
