@@ -8,9 +8,17 @@ make_obs_and_CI_plot <- function(dt_notifications,
   
   dt_forecasts_plot <- dt_forecasts %>%
     filter(date >= date_min, date <= date_max)
+
+  dt_start <- aggregate(date ~ state, data = dt_forecasts_plot, FUN = min) %>%
+    rename(start_date = date)
   
   dt_notifications_plot <- dt_notifications %>%
     filter(date >= date_min, date <= date_max) %>%
+    left_join(dt_start) %>%
+    group_by(state) %>%
+    filter(date >= start_date) %>%
+    ungroup() %>%
+    mutate(start_date = NULL) %>%
     mutate(adj_value = value / pr_detect)
   
   notifications_columns <- list(
@@ -29,14 +37,6 @@ make_obs_and_CI_plot <- function(dt_notifications,
   
   ggplot() +
     
-    ifelse(use_columns, notifications_columns, notifications_line) +
-    
-    geom_point(aes(x = date, y = adj_value),
-                   dt_notifications_plot %>% filter(pr_detect < 0.95, adj_value > 0),
-                   col = 'grey50',
-               pch = 1,
-               size = 1) +
-    
     geom_ribbon(aes(x = date, ymin = ymin, ymax = ymax, fill = prob, color = prob, group = prob),
                 dt_forecasts_plot %>% filter(prob %in% probs_plot),
                 alpha = 0.5) +
@@ -46,6 +46,14 @@ make_obs_and_CI_plot <- function(dt_notifications,
               alpha = 0.5,
               color = '#3182bd') +
     
+    ifelse(use_columns, notifications_columns, notifications_line) +
+
+    geom_point(aes(x = date, y = adj_value),
+                   dt_notifications_plot %>% filter(pr_detect < 0.95, adj_value > 0),
+                   col = 'grey50',
+               pch = 1,
+               size = 1) +
+
     scale_fill_brewer(palette = "Blues") +
     
     scale_color_brewer(palette = "Blues") +
@@ -64,7 +72,7 @@ make_obs_and_CI_plot <- function(dt_notifications,
     theme(legend.position = 'none') +
     
     facet_wrap(~state,
-               scales = "free_y",
+               scales = "free",
                ncol = 2)
   
   
