@@ -33,10 +33,17 @@ make_obs_and_CI_plot <- function(dt_notifications,
                    dt_notifications_plot,
                    col = 'grey50')
   )
+
+  draw_nothing <- list(
+    geom_blank(aes(x = date, y = value),
+               data = data.frame(date = dt_start$start_date, value = 0, state = dt_start$state))
+  )
   
   
   ggplot() +
     
+    ifelse(use_columns, notifications_columns, draw_nothing) +
+
     geom_ribbon(aes(x = date, ymin = ymin, ymax = ymax, fill = prob, color = prob, group = prob),
                 dt_forecasts_plot %>% filter(prob %in% probs_plot),
                 alpha = 0.5) +
@@ -46,7 +53,7 @@ make_obs_and_CI_plot <- function(dt_notifications,
               alpha = 0.5,
               color = '#3182bd') +
     
-    ifelse(use_columns, notifications_columns, notifications_line) +
+    ifelse(use_columns, draw_nothing, notifications_line) +
 
     geom_point(aes(x = date, y = adj_value),
                    dt_notifications_plot %>% filter(pr_detect < 0.95, adj_value > 0),
