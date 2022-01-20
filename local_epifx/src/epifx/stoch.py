@@ -89,12 +89,13 @@ class SEEIIR(Model):
         rnd_size = vec[..., 0].shape
         rnd = ctx.component['random']['model']
 
-        num_exps = 10.0
+        # NOTE: changed from 10.0 to 0.0.
+        num_exps = 0.0
         vec[..., :] = 0
 
         vec[..., self.ix_S_U] = self.popn_size - num_exps
         vec[..., self.ix_I1_U] = num_exps
-        
+
         vec[..., self.ix_R0] = prior['R0'](rnd, size=rnd_size)
         vec[..., self.ix_sigma] = prior['sigma'](rnd, size=rnd_size)
         vec[..., self.ix_gamma] = prior['gamma'](rnd, size=rnd_size)
@@ -274,7 +275,7 @@ class SEEIIR(Model):
         # Only calculate adj. factor for backcasts (expecting Reff to be held constant across forecasting period)
         if not is_fs:
             n = self.popn_size
-            
+
             # Calculating our adjustment factor
             # This needs to be bettered verified in context with vaccination
             # Argument in terms on dividing by Iu + Iv \tau_V??
@@ -288,10 +289,11 @@ class SEEIIR(Model):
 
         epoch = ctx.component['time'].to_scalar(ctx.params['epoch'])
         curr_t = ctx.component['time'].to_scalar(step_date)
-        zero_mask = t0 > (curr_t - epoch)
-        R0[zero_mask] = 0
-        sigma[zero_mask] = 0
-        gamma[zero_mask] = 0
+        # NOTE: commented this out.
+        # zero_mask = t0 > (curr_t - epoch)
+        # R0[zero_mask] = 0
+        # sigma[zero_mask] = 0
+        # gamma[zero_mask] = 0
 
         beta = R0 * adjustment * gamma
 

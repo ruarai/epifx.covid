@@ -164,7 +164,7 @@ process_external_exposures <- function(ext_exps_file,
 }
 
 
-get_forecast_dates <- function(local_cases_file) {
+get_forecast_dates <- function(local_cases_file, cutoff_threshold) {
   local_cases <- read_csv(local_cases_file)
   
   date_minimum_onset <- local_cases %>%
@@ -172,9 +172,9 @@ get_forecast_dates <- function(local_cases_file) {
     min()
   
   date_last_onset_50 <- local_cases %>%
-    # NOTE: change threshold to 90% for forecasts run on 2022-01-05.
+    # NOTE: change threshold to 95% for forecasts run on 2022-01-20.
     # filter(detection_probability > 0.5) %>%
-    filter(detection_probability > 0.90) %>%
+    filter(detection_probability > cutoff_threshold) %>%
     pull(date_onset) %>% max()
   
   date_last_infection_50 <- date_last_onset_50 - 5

@@ -15,13 +15,14 @@ tmp_dir = "exps/no_reversion"
 out_dir = "exps/no_reversion"
 max_days = 7
 model.forecast_with_future_R0 = true
-model.prior_samples.file = 'prior-sigma-gamma.ssv'
+# NOTE: use updated samples for sigma and gamma to prevent the generation
+# interval from becoming too large.
+model.prior_samples.file = 'updated-prior-sigma-gamma.ssv'
 model.prior_samples.columns = ['sigma', 'gamma']
 model.regularisation.R0_ix = true
 model.reorder_reffs = true
 resample.threshold = 0.25
 resample.regularisation = true
-time.start = "2020-01-01"
 # NOTE: extend the simulation period beyond 2020.
 time.until = "2022-12-31"
 time.max_forecast_ahead = 70
@@ -40,7 +41,8 @@ case_ascertainment = "case-ascertainment.ssv"
 [model.bounds]
 R0 = { min = 2.53, max = 2.53 }
 sigma = { min = 0.4, max = 0.6 }
-gamma = { min = 0.209, max = 10.0 }
+gamma = { min = 0.37, max = 6.5 }
+# gamma = { min = 0.209, max = 10.0 }
 t0 = { min = 0, max = 49 }
 R0_ix = { min = 0, max = 999 }
 
@@ -78,6 +80,7 @@ plot.point_precision = 0
 
 [scenario.VIC_FS]
 name = "Victoria"
+parameters.time.start = "2021-06-27"
 parameters.model.population_size = 6_682_000
 lookup_tables.R0 = "no_reversion/reff-proj-vic.ssv"
 lookup_tables.vaccinations = "vacc-data-vic.ssv"
@@ -89,6 +92,7 @@ model.priors.t0.args = { low = 20, high = 70, endpoint = true }
 
 [scenario.NSW_FS]
 name = "New South Wales"
+parameters.time.start = "2021-06-05"
 parameters.model.population_size = 8_168_000
 lookup_tables.R0 = "no_reversion/reff-proj-nsw.ssv"
 lookup_tables.vaccinations = "vacc-data-nsw.ssv"
@@ -99,6 +103,7 @@ model.priors.t0.function = "integers"
 
 [scenario.QLD_FS]
 name = "Queensland"
+parameters.time.start = "2021-06-10"
 parameters.model.population_size = 5_186_000
 lookup_tables.R0 = "no_reversion/reff-proj-qld.ssv"
 lookup_tables.vaccinations = "vacc-data-qld.ssv"
@@ -107,6 +112,7 @@ observations.Notifications.file = "daily-covid-cases-50-qld.ssv"
 
 [scenario.WA_FS]
 name = "Western Australia"
+parameters.time.start = "2021-12-14"
 parameters.model.population_size = 2_667_000
 lookup_tables.R0 = "no_reversion/reff-proj-wa.ssv"
 lookup_tables.vaccinations = "vacc-data-wa.ssv"
@@ -115,6 +121,7 @@ observations.Notifications.file = "daily-covid-cases-50-wa.ssv"
 
 [scenario.SA_FS]
 name = "South Australia"
+parameters.time.start = "2021-11-19"
 parameters.model.population_size = 1_771_000
 lookup_tables.R0 = "no_reversion/reff-proj-sa.ssv"
 lookup_tables.vaccinations = "vacc-data-sa.ssv"
@@ -123,6 +130,7 @@ observations.Notifications.file = "daily-covid-cases-50-sa.ssv"
 
 [scenario.ACT_FS]
 name = "Australian Capital Territory"
+parameters.time.start = "2021-08-06"
 parameters.model.population_size = 431_500
 lookup_tables.R0 = "no_reversion/reff-proj-act.ssv"
 lookup_tables.vaccinations = "vacc-data-act.ssv"
@@ -131,6 +139,7 @@ observations.Notifications.file = "daily-covid-cases-50-act.ssv"
 
 [scenario.NT_FS]
 name = "Northern Territory"
+parameters.time.start = "2021-10-28"
 parameters.model.population_size = 246_700
 lookup_tables.R0 = "no_reversion/reff-proj-nt.ssv"
 lookup_tables.vaccinations = "vacc-data-nt.ssv"
@@ -139,6 +148,7 @@ observations.Notifications.file = "daily-covid-cases-50-nt.ssv"
 
 [scenario.TAS_FS]
 name = "Tasmania"
+parameters.time.start = "2021-12-04"
 parameters.model.population_size = 541_300
 lookup_tables.R0 = "no_reversion/reff-proj-tas.ssv"
 lookup_tables.vaccinations = "vacc-data-tas.ssv"

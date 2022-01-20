@@ -11,10 +11,13 @@ produce_interim_vaccination_inputs <- function(vacc_timeseries_file) {
     select(state, date, mean_Ei, mean_Et)
   
   source("vaccination/code/functions_age_classes.R")
-  
-  dummy_dose_data <- expand_grid(
-    state = unique(Ei_Et_timeseries$state),
-    date = ymd("2021-01-01")
+
+  # NOTE: we need to vaccinate each jurisdiction at different times.
+  # The forecasts start at different dates in each jurisdiction.
+  dummy_dose_data <- tibble(
+    state = c('ACT', 'NSW', 'NT', 'QLD', 'SA', 'TAS', 'VIC', 'WA'),
+    date = ymd('2021-08-06', '2021-06-05', '2021-10-28', '2021-06-10',
+               '2021-11-19', '2021-12-04', '2021-06-27', '2021-12-14')
   ) %>%
     
     left_join(state_populations) %>%

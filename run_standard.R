@@ -8,6 +8,8 @@ library(future.callr)
 library(listenv)
 library(furrr)
 
+# The detection probability cutoff for daily case counts.
+cutoff_threshold <- 0.95
 
 ### Downloading latest data
 ## This includes the latest local_cases_input, r_eff_12_local_samples, external exposures, 
@@ -35,7 +37,7 @@ download_files(get_vaccine_files())
 
 # Create a 'run_name' that we use to label our results
 # This is the date of the latest case data date with pr_detect > 0.5
-forecasting_dates <- get_forecast_dates("data/in/local_cases_input.csv")
+forecasting_dates <- get_forecast_dates("data/in/local_cases_input.csv", cutoff_threshold)
 
 run_name <- forecasting_dates$date_last_onset_50 %>% format("%Y-%m-%d")
 
@@ -57,9 +59,9 @@ if (use_original_method) {
 
 
 # Read in the local cases file and split into SSV files for each state
-# NOTE: change detection threshold to 90% for the forecasts run on 2022-01-05.
+# NOTE: change detection threshold to 95% for the forecasts run on 2022-01-20.
 process_local_cases("data/in/local_cases_input.csv", 
-                    pr_detect_threshold = 0.90)
+                    pr_detect_threshold = cutoff_threshold)
                     # pr_detect_threshold = 0.5)
 
 # As above, for our external exposures listing
@@ -80,7 +82,7 @@ args_no_reversion <- tribble(~key,          ~value,
 
 scenarios <- tribble(
   ~name,            ~args,                     ~reff_truncation_date,
-  "with_reversion", list(args_with_reversion), ymd(NA),
+  # "with_reversion", list(args_with_reversion), ymd(NA),
   "no_reversion",   list(args_no_reversion),   forecasting_dates$date_last_infection_50,
 ) %>%
   rowwise() %>%
