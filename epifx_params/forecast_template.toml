@@ -85,6 +85,7 @@ parameters.model.population_size = 6_682_000
 lookup_tables.R0 = "%reffs_dir%/reff-proj-vic.ssv"
 lookup_tables.vaccinations = "vacc-data-vic.ssv"
 lookup_tables.external_exposures = "daily-external-exposures-vic.ssv"
+lookup_tables.Reff_scale = "%reffs_dir%/reff-scale-vic.ssv"
 observations.Notifications.file = "daily-covid-cases-50-vic.ssv"
 model.bounds.t0 = { min = 20, max = 70 }
 model.priors.t0.function = "integers"
@@ -97,6 +98,7 @@ parameters.model.population_size = 8_168_000
 lookup_tables.R0 = "%reffs_dir%/reff-proj-nsw.ssv"
 lookup_tables.vaccinations = "vacc-data-nsw.ssv"
 lookup_tables.external_exposures = "daily-external-exposures-nsw.ssv"
+lookup_tables.Reff_scale = "%reffs_dir%/reff-scale-nsw.ssv"
 observations.Notifications.file = "daily-covid-cases-50-nsw.ssv"
 model.priors.t0.function = "integers"
 
@@ -108,6 +110,7 @@ parameters.model.population_size = 5_186_000
 lookup_tables.R0 = "%reffs_dir%/reff-proj-qld.ssv"
 lookup_tables.vaccinations = "vacc-data-qld.ssv"
 lookup_tables.external_exposures = "daily-external-exposures-qld.ssv"
+lookup_tables.Reff_scale = "%reffs_dir%/reff-scale-qld.ssv"
 observations.Notifications.file = "daily-covid-cases-50-qld.ssv"
 
 [scenario.WA_FS]
@@ -117,6 +120,7 @@ parameters.model.population_size = 2_667_000
 lookup_tables.R0 = "%reffs_dir%/reff-proj-wa.ssv"
 lookup_tables.vaccinations = "vacc-data-wa.ssv"
 lookup_tables.external_exposures = "daily-external-exposures-wa.ssv"
+lookup_tables.Reff_scale = "%reffs_dir%/reff-scale-wa.ssv"
 observations.Notifications.file = "daily-covid-cases-50-wa.ssv"
 
 [scenario.SA_FS]
@@ -126,6 +130,7 @@ parameters.model.population_size = 1_771_000
 lookup_tables.R0 = "%reffs_dir%/reff-proj-sa.ssv"
 lookup_tables.vaccinations = "vacc-data-sa.ssv"
 lookup_tables.external_exposures = "daily-external-exposures-sa.ssv"
+lookup_tables.Reff_scale = "%reffs_dir%/reff-scale-sa.ssv"
 observations.Notifications.file = "daily-covid-cases-50-sa.ssv"
 
 [scenario.ACT_FS]
@@ -135,6 +140,7 @@ parameters.model.population_size = 431_500
 lookup_tables.R0 = "%reffs_dir%/reff-proj-act.ssv"
 lookup_tables.vaccinations = "vacc-data-act.ssv"
 lookup_tables.external_exposures = "daily-external-exposures-act.ssv"
+lookup_tables.Reff_scale = "%reffs_dir%/reff-scale-act.ssv"
 observations.Notifications.file = "daily-covid-cases-50-act.ssv"
 
 [scenario.NT_FS]
@@ -144,6 +150,7 @@ parameters.model.population_size = 246_700
 lookup_tables.R0 = "%reffs_dir%/reff-proj-nt.ssv"
 lookup_tables.vaccinations = "vacc-data-nt.ssv"
 lookup_tables.external_exposures = "daily-external-exposures-nt.ssv"
+lookup_tables.Reff_scale = "%reffs_dir%/reff-scale-nt.ssv"
 observations.Notifications.file = "daily-covid-cases-50-nt.ssv"
 
 [scenario.TAS_FS]
@@ -153,5 +160,6 @@ parameters.model.population_size = 541_300
 lookup_tables.R0 = "%reffs_dir%/reff-proj-tas.ssv"
 lookup_tables.vaccinations = "vacc-data-tas.ssv"
 lookup_tables.external_exposures = "daily-external-exposures-tas.ssv"
+lookup_tables.Reff_scale = "%reffs_dir%/reff-scale-tas.ssv"
 observations.Notifications.file = "daily-covid-cases-50-tas.ssv"
 

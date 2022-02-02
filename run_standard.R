@@ -79,11 +79,15 @@ args_with_reversion <- tribble(~key,          ~value,
 args_no_reversion <- tribble(~key,          ~value,
                              "%exps_dir%",  "exps/no_reversion",
                              "%reffs_dir%", "no_reversion")
+args_back_to_school <- tribble(~key,          ~value,
+                               "%exps_dir%",  "exps/back_to_school",
+                               "%reffs_dir%", "back_to_school")
 
 scenarios <- tribble(
   ~name,            ~args,                     ~reff_truncation_date,
   # "with_reversion", list(args_with_reversion), ymd(NA),
   "no_reversion",   list(args_no_reversion),   forecasting_dates$date_last_infection_50,
+  "back_to_school",   list(args_back_to_school),   forecasting_dates$date_last_infection_50,
 ) %>%
   rowwise() %>%
   mutate(exps_dir = args[[1]] %>% filter(key == "%exps_dir%") %>% pull(value))

@@ -82,6 +82,7 @@ class SEEIIR(Model):
         self.__R0_lookup = None
         self.__external_lookup = None
         self.__vaccinations_lookup = None
+        self.__Reff_scale_lookup = None
         self.__regularise_R0_ix = ctx.params.get_chained(
             ['model', 'regularisation', 'R0_ix'], default=False)
 
@@ -198,6 +199,14 @@ class SEEIIR(Model):
             logger.info(
                 'Using lookup table for vaccinations with {} values'
                 .format(self.__vaccinations_lookup.value_count()))
+
+        # Check for the Reff scale lookup table.
+        scale_table = 'Reff_scale'
+        if scale_table in tables:
+            self.__Reff_scale_lookup = tables[scale_table]
+            logger.info(
+                'Using lookup table for Reff_scale with {} values'
+                .format(self.__Reff_scale_lookup.value_count()))
 
     def init_lookup_values(self, ctx, vec):
         """
@@ -376,7 +385,12 @@ class SEEIIR(Model):
             when = step_date
         # Retrieve R0(t) values from the lookup table.
         R0_values = self.__R0_lookup.lookup(when)
-        
+
+        if self.__Reff_scale_lookup is not None:
+            # Apply the scaling factor.
+            scale = self.__Reff_scale_lookup.lookup(step_date)
+            R0_values = R0_values * scale
+
         if ctx.params['model']['reorder_reffs']:
             R0_ix_mapped = self.R0_order_map[R0_ix]
 
