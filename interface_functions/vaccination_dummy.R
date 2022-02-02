@@ -77,6 +77,9 @@ delta_omicron_transition_dates <- function() {
 
 interpolated_vaccine_effect <- function(vacc_timeseries_file) {
     VE_timeseries <- read_csv(vacc_timeseries_file) %>%
+        mutate(percent_reduction = NULL) %>%
+        spread(variant, effect) %>%
+        rename(effect_delta = Delta, effect_omicron = Omicron) %>%
         mutate(effect_delta = if_else(is.na(effect_delta), 1, effect_delta))
 
     if (any(is.na(VE_timeseries))) {
