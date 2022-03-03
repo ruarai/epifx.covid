@@ -11,8 +11,8 @@ prng_seed = 3001
 steps_per_unit = 100
 last_n_periods = 1
 data_dir = "./data"
-tmp_dir = "%exps_dir%"
-out_dir = "%exps_dir%"
+tmp_dir = "exps/back_to_school"
+out_dir = "exps/back_to_school"
 max_days = 7
 model.forecast_with_future_R0 = true
 # NOTE: use updated samples for sigma and gamma to prevent the generation
@@ -36,7 +36,7 @@ fresh_cache = true
 remove_cache = true
 
 [lookup_tables]
-case_ascertainment = "%reffs_dir%/case-ascertainment.ssv"
+case_ascertainment = "back_to_school/case-ascertainment.ssv"
 
 [model.bounds]
 R0 = { min = 2.53, max = 2.53 }
@@ -82,10 +82,10 @@ plot.point_precision = 0
 name = "Victoria"
 parameters.time.start = "2021-06-27"
 parameters.model.population_size = 6_682_000
-lookup_tables.R0 = "%reffs_dir%/reff-proj-vic.ssv"
+lookup_tables.R0 = "back_to_school/reff-proj-vic.ssv"
 lookup_tables.vaccinations = "vacc-data-vic.ssv"
 lookup_tables.external_exposures = "daily-external-exposures-vic.ssv"
-lookup_tables.Reff_scale = "%reffs_dir%/reff-scale-vic.ssv"
+lookup_tables.Reff_scale = "back_to_school/reff-scale-vic.ssv"
 observations.Notifications.file = "daily-covid-cases-50-vic.ssv"
 model.bounds.t0 = { min = 20, max = 70 }
 model.priors.t0.function = "integers"
@@ -95,10 +95,10 @@ model.priors.t0.args = { low = 20, high = 70, endpoint = true }
 name = "New South Wales"
 parameters.time.start = "2021-06-05"
 parameters.model.population_size = 8_168_000
-lookup_tables.R0 = "%reffs_dir%/reff-proj-nsw.ssv"
+lookup_tables.R0 = "back_to_school/reff-proj-nsw.ssv"
 lookup_tables.vaccinations = "vacc-data-nsw.ssv"
 lookup_tables.external_exposures = "daily-external-exposures-nsw.ssv"
-lookup_tables.Reff_scale = "%reffs_dir%/reff-scale-nsw.ssv"
+lookup_tables.Reff_scale = "back_to_school/reff-scale-nsw.ssv"
 observations.Notifications.file = "daily-covid-cases-50-nsw.ssv"
 model.priors.t0.function = "integers"
 
@@ -107,59 +107,59 @@ model.priors.t0.function = "integers"
 name = "Queensland"
 parameters.time.start = "2021-06-10"
 parameters.model.population_size = 5_186_000
-lookup_tables.R0 = "%reffs_dir%/reff-proj-qld.ssv"
+lookup_tables.R0 = "back_to_school/reff-proj-qld.ssv"
 lookup_tables.vaccinations = "vacc-data-qld.ssv"
 lookup_tables.external_exposures = "daily-external-exposures-qld.ssv"
-lookup_tables.Reff_scale = "%reffs_dir%/reff-scale-qld.ssv"
+lookup_tables.Reff_scale = "back_to_school/reff-scale-qld.ssv"
 observations.Notifications.file = "daily-covid-cases-50-qld.ssv"
 
 [scenario.WA_FS]
 name = "Western Australia"
 parameters.time.start = "2021-12-14"
 parameters.model.population_size = 2_667_000
-lookup_tables.R0 = "%reffs_dir%/reff-proj-wa.ssv"
+lookup_tables.R0 = "back_to_school/reff-proj-wa.ssv"
 lookup_tables.vaccinations = "vacc-data-wa.ssv"
 lookup_tables.external_exposures = "daily-external-exposures-wa.ssv"
-lookup_tables.Reff_scale = "%reffs_dir%/reff-scale-wa.ssv"
+lookup_tables.Reff_scale = "back_to_school/reff-scale-wa.ssv"
 observations.Notifications.file = "daily-covid-cases-50-wa.ssv"
 
 [scenario.SA_FS]
 name = "South Australia"
 parameters.time.start = "2021-11-19"
 parameters.model.population_size = 1_771_000
-lookup_tables.R0 = "%reffs_dir%/reff-proj-sa.ssv"
+lookup_tables.R0 = "back_to_school/reff-proj-sa.ssv"
 lookup_tables.vaccinations = "vacc-data-sa.ssv"
 lookup_tables.external_exposures = "daily-external-exposures-sa.ssv"
-lookup_tables.Reff_scale = "%reffs_dir%/reff-scale-sa.ssv"
+lookup_tables.Reff_scale = "back_to_school/reff-scale-sa.ssv"
 observations.Notifications.file = "daily-covid-cases-50-sa.ssv"
 
 [scenario.ACT_FS]
 name = "Australian Capital Territory"
 parameters.time.start = "2021-08-06"
 parameters.model.population_size = 431_500
-lookup_tables.R0 = "%reffs_dir%/reff-proj-act.ssv"
+lookup_tables.R0 = "back_to_school/reff-proj-act.ssv"
 lookup_tables.vaccinations = "vacc-data-act.ssv"
 lookup_tables.external_exposures = "daily-external-exposures-act.ssv"
-lookup_tables.Reff_scale = "%reffs_dir%/reff-scale-act.ssv"
+lookup_tables.Reff_scale = "back_to_school/reff-scale-act.ssv"
 observations.Notifications.file = "daily-covid-cases-50-act.ssv"
 
 [scenario.NT_FS]
 name = "Northern Territory"
 parameters.time.start = "2021-10-28"
 parameters.model.population_size = 246_700
-lookup_tables.R0 = "%reffs_dir%/reff-proj-nt.ssv"
+lookup_tables.R0 = "back_to_school/reff-proj-nt.ssv"
 lookup_tables.vaccinations = "vacc-data-nt.ssv"
 lookup_tables.external_exposures = "daily-external-exposures-nt.ssv"
-lookup_tables.Reff_scale = "%reffs_dir%/reff-scale-nt.ssv"
+lookup_tables.Reff_scale = "back_to_school/reff-scale-nt.ssv"
 observations.Notifications.file = "daily-covid-cases-50-nt.ssv"
 
 [scenario.TAS_FS]
 name = "Tasmania"
 parameters.time.start = "2021-12-04"
 parameters.model.population_size = 541_300
-lookup_tables.R0 = "%reffs_dir%/reff-proj-tas.ssv"
+lookup_tables.R0 = "back_to_school/reff-proj-tas.ssv"
 lookup_tables.vaccinations = "vacc-data-tas.ssv"
 lookup_tables.external_exposures = "daily-external-exposures-tas.ssv"
-lookup_tables.Reff_scale = "%reffs_dir%/reff-scale-tas.ssv"
+lookup_tables.Reff_scale = "back_to_school/reff-scale-tas.ssv"
 observations.Notifications.file = "daily-covid-cases-50-tas.ssv"
 

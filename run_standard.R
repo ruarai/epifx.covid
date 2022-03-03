@@ -82,12 +82,30 @@ args_no_reversion <- tribble(~key,          ~value,
 args_back_to_school <- tribble(~key,          ~value,
                                "%exps_dir%",  "exps/back_to_school",
                                "%reffs_dir%", "back_to_school")
+args_covidlive <- tribble(~key,          ~value,
+                          "%exps_dir%",  "exps/covidlive",
+                          "%reffs_dir%", "covidlive")
+
+## Different case-ascertainment scenarios from 2021-12-01.
+args_ascertain_125 <- tribble(~key,          ~value,
+                              "%exps_dir%",  "exps/ascertain_12.5",
+                              "%reffs_dir%", "ascertain_12.5")
+args_ascertain_250 <- tribble(~key,          ~value,
+                              "%exps_dir%",  "exps/ascertain_25.0",
+                              "%reffs_dir%", "ascertain_25.0")
+args_ascertain_375 <- tribble(~key,          ~value,
+                              "%exps_dir%",  "exps/ascertain_37.5",
+                              "%reffs_dir%", "ascertain_37.5")
 
 scenarios <- tribble(
   ~name,            ~args,                     ~reff_truncation_date,
   # "with_reversion", list(args_with_reversion), ymd(NA),
-  "no_reversion",   list(args_no_reversion),   forecasting_dates$date_last_infection_50,
+  # "no_reversion",   list(args_no_reversion),   forecasting_dates$date_last_infection_50,
   "back_to_school",   list(args_back_to_school),   forecasting_dates$date_last_infection_50,
+  "ascertain_12.5",   list(args_ascertain_125),    forecasting_dates$date_last_infection_50,
+  "ascertain_25.0",   list(args_ascertain_250),    forecasting_dates$date_last_infection_50,
+  "ascertain_37.5",   list(args_ascertain_375),    forecasting_dates$date_last_infection_50,
+  # "covidlive",   list(args_covidlive),   forecasting_dates$date_last_infection_50,
 ) %>%
   rowwise() %>%
   mutate(exps_dir = args[[1]] %>% filter(key == "%exps_dir%") %>% pull(value))
