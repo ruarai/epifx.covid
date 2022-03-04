@@ -15,8 +15,10 @@ cutoff_threshold <- 0.95
 ## This includes the latest local_cases_input, r_eff_12_local_samples, external exposures, 
 ## as well as the vaccination time-series from the Curtain model
 
-source("interface_functions/dropbox.R")
+# source("interface_functions/dropbox.R")
 source("interface_functions/data.R")
+
+source("interface_functions/reff_mediaflux.R")
 
 dbx_files <- tribble(
   ~remote_file, ~local_file,
@@ -26,14 +28,17 @@ dbx_files <- tribble(
 )
 
 # And then download all of them
-download_files(dbx_files)
+# download_files(dbx_files)
 
 # Download the vaccination files from mediaflux
-source("interface_functions/mediaflux.R")
-sync_latest_mediaflux()
+# source("interface_functions/mediaflux.R")
+# sync_latest_mediaflux()
 
 # Download the Delta and Omicron VE data from dropbox
-download_files(get_vaccine_files())
+# download_files(get_vaccine_files())
+
+# Download Reff samples, local cases, and vaccination effects.
+download_data_files_from_mediaflux()
 
 # Create a 'run_name' that we use to label our results
 # This is the date of the latest case data date with pr_detect > 0.5
