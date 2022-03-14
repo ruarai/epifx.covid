@@ -18,7 +18,7 @@ cutoff_threshold <- 0.95
 # source("interface_functions/dropbox.R")
 source("interface_functions/data.R")
 
-source("interface_functions/reff_mediaflux.R")
+source("interface_functions/mediaflux_fetch.R")
 
 dbx_files <- tribble(
   ~remote_file, ~local_file,
@@ -38,7 +38,7 @@ dbx_files <- tribble(
 # download_files(get_vaccine_files())
 
 # Download Reff samples, local cases, and vaccination effects.
-download_data_files_from_mediaflux()
+mediaflux_fetch()
 
 # Create a 'run_name' that we use to label our results
 # This is the date of the latest case data date with pr_detect > 0.5

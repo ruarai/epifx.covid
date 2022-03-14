@@ -17,6 +17,8 @@ reff_cis_*.csv
 upload.sh
 interface_functions/dropbox.R
 interface_functions/mediaflux.R
+interface_functions/mediaflux_fetch.R
+interface_functions/mediaflux_fetch.tcl
 interface_functions/reff_mediaflux.R
 interface_functions/spartan_backup.R
 auth_info
