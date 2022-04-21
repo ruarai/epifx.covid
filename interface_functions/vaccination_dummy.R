@@ -70,7 +70,7 @@ delta_omicron_transition_dates <- function() {
         'SA',  as.Date('2021-12-01'), as.Date('2022-01-01'),
         'TAS', as.Date('2021-12-01'), as.Date('2022-01-01'),
         'VIC', as.Date('2021-12-01'), as.Date('2022-01-01'),
-        'WA',  as.Date('2022-12-31'), as.Date('2023-01-01'),
+        'WA',  as.Date('2021-12-31'), as.Date('2022-01-01'),
         )
 }
 
